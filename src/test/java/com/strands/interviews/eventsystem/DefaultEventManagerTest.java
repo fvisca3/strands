@@ -109,4 +109,19 @@ public class DefaultEventManagerTest
         {
         }
     }
+
+    /**
+     * Test that when we publish a SubEvent, listeners of SimpleEvent do not receive notification
+     */
+    @Test
+    public void testWhenPublishSubEventListenersOfSimpleEventDoNotReceiveNotification()
+    {
+        EventListenerMock simpleEventListenerMock = new EventListenerMock(new Class[]{SimpleEvent.class});
+        EventListenerMock subEventListenerMock = new EventListenerMock(new Class[]{SubEvent.class});
+        eventManager.registerListener("some.key1", simpleEventListenerMock);
+        eventManager.registerListener("some.key2", subEventListenerMock);
+        eventManager.publishEvent(new SubEvent(this));
+        assertTrue(subEventListenerMock.isCalled());
+        assertFalse(simpleEventListenerMock.isCalled());
+    }
 }
