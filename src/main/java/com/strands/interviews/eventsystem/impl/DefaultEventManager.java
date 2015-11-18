@@ -32,7 +32,17 @@ public class DefaultEventManager implements EventManager
         sendEventTo(event, listenersToAll);
     }
 
-    private Collection calculateListeners(Class eventClass) { return (Collection) listenersByClass.get(eventClass); }
+    private Collection calculateListeners(Class eventClass) {
+        Collection listenersToNotify = new LinkedList();
+
+        for (Object key: listenersByClass.keySet()) {
+            if (((Class)key).isAssignableFrom(eventClass)) {
+                listenersToNotify.addAll(((List)listenersByClass.get(key)));
+            }
+        }
+
+        return listenersToNotify;
+    }
 
     public void registerListener(String listenerKey, InterviewEventListener listener)
     {
