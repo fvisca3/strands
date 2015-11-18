@@ -124,4 +124,18 @@ public class DefaultEventManagerTest
         assertTrue(subEventListenerMock.isCalled());
         assertFalse(simpleEventListenerMock.isCalled());
     }
+
+    /**
+     * Test listener to all events
+     */
+    @Test
+    public void testListenerToAllEvents()
+    {
+        EventListenerMock allEventListenerMock = new EventListenerMock(new Class[]{}); // Pass empty array, so it will listen to all event types
+        eventManager.registerListener("some.key", allEventListenerMock);
+        eventManager.publishEvent(new SubEvent(this));
+        eventManager.publishEvent(new SimpleEvent(this));
+        assertTrue(allEventListenerMock.isCalled());
+        assertEquals(2, allEventListenerMock.count);
+    }
 }
